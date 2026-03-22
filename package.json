@@ -4,8 +4,12 @@
   "description": "Build your AI company in one command",
   "type": "module",
   "bin": {
-    "create-tellet": "./dist/index.js"
+    "create-tellet": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "template"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
