@@ -1,6 +1,6 @@
 {
   "name": "@tellet/create",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The open-source platform for running an Agentic Company",
   "type": "module",
   "bin": {
