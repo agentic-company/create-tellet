@@ -1,5 +1,7 @@
 import { createServerSupabase } from "@/lib/supabase";
-import { getProvider } from "@/lib/providers";
+import { streamAgentWithTools } from "@/lib/engine";
+import { searchKnowledge } from "@/lib/mcp/knowledge";
+import type Anthropic from "@anthropic-ai/sdk";
 
 export async function POST(request: Request) {
   const { message, agent_id, conversation_id } = await request.json();
@@ -50,12 +52,38 @@ export async function POST(request: Request) {
     content: m.content,
   }));
 
-  // Stream response
-  const provider = getProvider(agent.config?.provider as string | undefined);
-  const stream = await provider.stream({
-    model: agent.model,
-    system: agent.system_prompt,
+  // Built-in tools
+  const builtinTools = [
+    {
+      name: "search_knowledge",
+      description: "Search the company knowledge base for product info, policies, and FAQ",
+      input_schema: {
+        type: "object" as const,
+        properties: {
+          query: { type: "string", description: "Search query" },
+        },
+        required: ["query"],
+      },
+      execute: async (input: Record<string, unknown>) => {
+        return searchKnowledge(input.query as string);
+      },
+    },
+  ];
+
+  // Stream with tool use
+  const stream = await streamAgentWithTools({
+    agent: {
+      id: agent.id,
+      name: agent.name,
+      role: agent.role,
+      model: agent.model,
+      provider: agent.config?.provider as string | undefined,
+      systemPrompt: agent.system_prompt,
+      channels: ["web_chat"],
+      tools: agent.config?.tools || [],
+    },
     messages,
+    builtinTools,
   });
 
   let fullResponse = "";

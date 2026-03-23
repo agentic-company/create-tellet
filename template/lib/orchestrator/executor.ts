@@ -1,4 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase";
+import { addDocument, searchKnowledge, listDocuments, deleteDocument } from "@/lib/mcp/knowledge";
 import fs from "fs";
 import path from "path";
 
@@ -82,6 +83,27 @@ export async function executeTool(
         .order("created_at", { ascending: false })
         .limit(limit);
       return JSON.stringify(data || []);
+    }
+
+    case "add_knowledge": {
+      const { title, content, category } = input as {
+        title: string;
+        content: string;
+        category?: string;
+      };
+      return addDocument(title, content, category);
+    }
+
+    case "search_knowledge": {
+      return searchKnowledge(input.query as string);
+    }
+
+    case "list_knowledge": {
+      return listDocuments();
+    }
+
+    case "delete_knowledge": {
+      return deleteDocument(input.document_id as string);
     }
 
     default:

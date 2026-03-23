@@ -106,7 +106,14 @@ export async function scaffoldProject(options: ScaffoldOptions): Promise<string>
       role: a.role,
       model: a.model,
       channels: ["web_chat"],
+      tools: a.role === "customer_support" ? ["search_knowledge"] : [],
     })),
+    tools: {
+      search_knowledge: {
+        type: "builtin",
+        description: "Search company knowledge base",
+      },
+    },
     channels: {
       web_chat: { enabled: true },
       slack: { enabled: false },
@@ -187,6 +194,7 @@ export default defineAgent({
         "react-dom": "^19.2.0",
         "@anthropic-ai/sdk": "^0.80.0",
         openai: "^6.32.0",
+        "@modelcontextprotocol/sdk": "^1.12.0",
         "@supabase/supabase-js": "^2.99.0",
         "@supabase/ssr": "^0.9.0",
         tailwindcss: "^4.0.0",
@@ -228,6 +236,40 @@ function generateMigration(agents: AgentConfig[]): string {
     .join(",\n");
 
   return `-- tellet schema
+
+-- Knowledge Base (pgvector)
+create extension if not exists vector;
+
+create table documents (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  content text not null,
+  embedding vector(1536),
+  category text default 'general',
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create index on documents using ivfflat (embedding vector_cosine_ops) with (lists = 50);
+
+create or replace function match_documents(
+  query_embedding vector(1536),
+  match_count int default 3,
+  match_threshold float default 0.5
+)
+returns table (id uuid, title text, content text, category text, similarity float)
+language sql stable
+as $$
+  select
+    d.id, d.title, d.content, d.category,
+    1 - (d.embedding <=> query_embedding) as similarity
+  from documents d
+  where 1 - (d.embedding <=> query_embedding) > match_threshold
+  order by d.embedding <=> query_embedding
+  limit match_count;
+$$;
+
+-- Core tables
 create table agents (
   id text primary key,
   name text not null,
@@ -274,10 +316,14 @@ create index idx_activity_agent on activity_log(agent_id);
 create index idx_activity_time on activity_log(created_at desc);
 
 -- RLS
+alter table documents enable row level security;
 alter table agents enable row level security;
 alter table conversations enable row level security;
 alter table messages enable row level security;
 alter table activity_log enable row level security;
+
+create policy "auth_all" on documents for all to authenticated using (true) with check (true);
+create policy "anon_read_docs" on documents for select to anon using (true);
 
 create policy "auth_all" on agents for all to authenticated using (true) with check (true);
 create policy "auth_all" on conversations for all to authenticated using (true) with check (true);

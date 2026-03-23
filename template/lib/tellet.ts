@@ -12,7 +12,14 @@ export interface TelletConfig {
     role: string;
     model: string;
     channels: string[];
+    tools?: string[];
   }[];
+  tools?: Record<string, {
+    type: string;
+    package?: string;
+    env?: Record<string, string>;
+    description?: string;
+  }>;
   channels: Record<string, { enabled: boolean }>;
   storage: string;
   integrations: string[];

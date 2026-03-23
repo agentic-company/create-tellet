@@ -103,4 +103,67 @@ export const orchestratorTools: Anthropic.Tool[] = [
       required: [],
     },
   },
+  {
+    name: "add_knowledge",
+    description:
+      "Add a document to the company knowledge base. Agents use this to answer customer questions accurately.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        title: {
+          type: "string",
+          description: "Document title (e.g. 'Refund Policy')",
+        },
+        content: {
+          type: "string",
+          description: "Full document content",
+        },
+        category: {
+          type: "string",
+          description: "Category: policy, product, faq, or general",
+        },
+      },
+      required: ["title", "content"],
+    },
+  },
+  {
+    name: "search_knowledge",
+    description:
+      "Search the knowledge base to check what information agents have access to.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        query: {
+          type: "string",
+          description: "Search query",
+        },
+      },
+      required: ["query"],
+    },
+  },
+  {
+    name: "list_knowledge",
+    description:
+      "List all documents in the knowledge base.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "delete_knowledge",
+    description:
+      "Delete a document from the knowledge base by ID.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        document_id: {
+          type: "string",
+          description: "The document ID to delete",
+        },
+      },
+      required: ["document_id"],
+    },
+  },
 ];

@@ -13,4 +13,5 @@ export function defineAgent(config: AgentConfig): AgentConfig {
   return config;
 }
 
-export { streamAgent } from "./default";
+export { streamAgent, streamAgentWithTools } from "./default";
+export type { AgentStreamOptions } from "./default";
