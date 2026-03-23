@@ -16,10 +16,10 @@ export function Sidebar({ companyName }: { companyName: string }) {
 
   return (
     <aside className="w-56 border-r border-border bg-bg-primary flex flex-col h-full">
-      <div className="p-5">
+      <Link href="/" className="block p-5 hover:bg-bg-secondary/50 transition-colors">
         <span className="text-lg font-bold tracking-tight">{companyName}</span>
         <p className="text-[11px] text-text-tertiary mt-0.5">Powered by tellet</p>
-      </div>
+      </Link>
       <nav className="flex-1 px-3 space-y-0.5">
         {nav.map((item) => (
           <Link

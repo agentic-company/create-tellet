@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Markdown } from "./Markdown";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -87,7 +88,7 @@ export function ChatWidget({ agentId, agentName }: { agentId: string; agentName:
             {messages.map((m, i) => (
               <div key={i} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
                 <div className={cn("rounded-xl px-3 py-2 max-w-[85%] text-sm leading-relaxed", m.role === "user" ? "bg-accent text-white" : "bg-bg-secondary text-text-primary border border-border")}>
-                  {m.content || <span className="inline-flex gap-1"><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse" /><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse [animation-delay:150ms]" /><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse [animation-delay:300ms]" /></span>}
+                  {m.content ? <Markdown content={m.content} /> : <span className="inline-flex gap-1"><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse" /><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse [animation-delay:150ms]" /><span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse [animation-delay:300ms]" /></span>}
                 </div>
               </div>
             ))}

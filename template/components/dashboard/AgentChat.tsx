@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Markdown } from "@/components/chat/Markdown";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -147,7 +148,7 @@ export function AgentChat({ agent, onClose }: AgentChatProps) {
                     : "bg-bg-secondary text-text-primary border border-border"
                 )}
               >
-                {m.content || (
+                {m.content ? <Markdown content={m.content} /> : (
                   <span className="inline-flex gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse" />
                     <span className="w-1.5 h-1.5 rounded-full bg-text-tertiary animate-pulse [animation-delay:150ms]" />
