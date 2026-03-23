@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { OrchestratorChat } from "@/components/dashboard/OrchestratorChat";
 import config from "../../tellet.json";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -8,6 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 overflow-y-auto bg-bg-primary">
         <div className="p-8">{children}</div>
       </main>
+      <OrchestratorChat />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@tellet/create",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build your AI company in one command",
   "type": "module",
   "bin": {

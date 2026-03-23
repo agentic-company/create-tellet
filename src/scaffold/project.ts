@@ -278,6 +278,8 @@ create policy "anon_read_agents" on agents for select to anon using (status = 'a
 create policy "anon_insert_conv" on conversations for insert to anon with check (channel = 'web_chat');
 create policy "anon_insert_msg" on messages for insert to anon with check (true);
 create policy "anon_read_msg" on messages for select to anon using (true);
+create policy "anon_read_conv" on conversations for select to anon using (true);
+create policy "anon_read_activity" on activity_log for select to anon using (true);
 
 -- Realtime
 alter publication supabase_realtime add table activity_log;
