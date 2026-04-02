@@ -1,10 +1,10 @@
 {
-  "name": "@tellet/create",
+  "name": "create-tellet",
   "version": "0.8.3",
   "description": "The open-source platform for running an Agentic Company",
   "type": "module",
   "bin": {
-    "create": "dist/index.js"
+    "create-tellet": "dist/index.js"
   },
   "files": [
     "dist",
@@ -28,9 +28,15 @@
     "no-code"
   ],
   "license": "MIT",
+  "author": "tellet <hello@tellet.com>",
+  "homepage": "https://tellet.com",
+  "bugs": "https://github.com/agentic-company/tellet/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/agentic-company/tellet"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

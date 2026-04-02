@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Verify dist output
+        run: |
+          test -f dist/index.js
+          test -f dist/ai/generate.js
+          test -f dist/scaffold/project.js
+          head -1 dist/index.js | grep -q '#!/usr/bin/env node'
+
+      - name: Verify template files
+        run: |
+          test -d template
+          test -f template/app/layout.tsx
+          test -f template/lib/engine/default.ts
+          test -f template/lib/orchestrator/executor.ts
+
+      - name: Dry-run publish check
+        run: npm publish --dry-run --access public 2>&1 | head -30

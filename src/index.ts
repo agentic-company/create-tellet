@@ -15,7 +15,7 @@ async function main() {
   );
   console.log();
 
-  p.intro(chalk.bgHex("#8b5cf6").white(" @tellet/create "));
+  p.intro(chalk.bgHex("#8b5cf6").white(" create-tellet "));
 
   // Step 0: New or Connect
   const modeChoice = await p.select({
