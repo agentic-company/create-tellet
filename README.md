@@ -3,7 +3,7 @@
 > The open-source platform for running an Agentic Company.
 
 ```bash
-npx create-tellet
+npx @tellet/create
 ```
 
 tellet is a management platform for AI-powered companies. One command generates your AI agent team, website, dashboard, Knowledge Base, and Orchestrator — ready to deploy anywhere.
@@ -21,7 +21,7 @@ tellet is a management platform for AI-powered companies. One command generates 
 ## How it works
 
 ```
-npx create-tellet
+npx @tellet/create
 
 ? New or Connect?          → New business or add AI to existing
 ? Deployment?              → Quick Start / Cloud / Enterprise
@@ -46,18 +46,18 @@ npx create-tellet
 
 ```bash
 # Quick Start (Vercel + Supabase, free)
-npx create-tellet
+npx @tellet/create
 cd your-company
 npm install && npm run dev
 
 # Cloud (Docker + Railway, $5/mo)
-npx create-tellet  # choose "Cloud"
+npx @tellet/create  # choose "Cloud"
 cd your-company
 docker compose up         # local dev
 railway up                # deploy
 
 # Enterprise (AWS CDK, $5-15/mo)
-npx create-tellet  # choose "Enterprise"
+npx @tellet/create  # choose "Enterprise"
 cd your-company/infra
 npm install && npx cdk deploy
 ```
@@ -142,7 +142,7 @@ Connect tools via the Orchestrator or `tellet.json`:
 Already have a business? Use Connect mode:
 
 ```bash
-npx create-tellet  # choose "Connect"
+npx @tellet/create  # choose "Connect"
 ```
 
 - Skips site generation, keeps dashboard + API
@@ -192,4 +192,4 @@ MIT
 
 - [tellet.com](https://tellet.com) — Website
 - [GitHub](https://github.com/agentic-company/tellet) — Source code
-- [npm](https://www.npmjs.com/package/create-tellet) — Package
+- [npm](https://www.npmjs.com/package/@tellet/create) — Package
