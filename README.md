@@ -1,188 +1,154 @@
 # Tell it. Let it.
 
-> The open-source platform for running an Agentic Company.
+> AI agents that run your business — email, delegate, schedule, embed.
 
 ```bash
 npx @tellet/create
 ```
 
-tellet is a management platform for AI-powered companies. One command generates your AI agent team, website, dashboard, Knowledge Base, and Orchestrator — ready to deploy anywhere.
+Or start instantly at [tellet.com](https://tellet.com) — no setup required.
 
-## What you get
+---
 
-- **AI Agent Team** — 3-5 agents auto-generated for your business (CS, marketing, sales, ops)
-- **Orchestrator** — Manage your entire company through conversation
-- **Knowledge Base** — pgvector-powered, agents reference it for accurate answers
-- **Dashboard** — Stats, agent chat, conversations, onboarding
-- **Tool Marketplace** — Stripe, Email, GitHub, Slack, Notion via MCP
-- **Embeddable Widget** — One script tag to add AI chat to any website
-- **3-Tier Deployment** — Free (Vercel) / Cloud (Railway) / Enterprise (AWS)
+tellet generates an AI agent team for your business. Agents don't just chat — they send emails, delegate tasks to each other, run scheduled automations, and serve customers through an embeddable widget.
+
+## What agents can do
+
+- **Email customers** — Send follow-ups, confirmations, and outreach via Resend
+- **Delegate to each other** — Support agent routes billing questions to sales automatically
+- **Run on schedule** — Daily reports, weekly summaries, automated follow-ups via cron
+- **Search knowledge** — Reference your product info, policies, and FAQ for accurate answers
+- **Serve customers anywhere** — Embeddable widget for any website, one script tag
+
+## Two ways to start
+
+### Hosted (tellet.com) — recommended
+
+1. Sign up at [tellet.com](https://tellet.com)
+2. Describe your business in one sentence
+3. AI generates your agent team with email, delegation, and scheduling
+4. Embed the widget on your site, agents go to work
+
+### Self-hosted (CLI)
+
+```bash
+npx @tellet/create
+cd your-company
+npm install && npm run dev
+```
 
 ## How it works
 
 ```
-npx @tellet/create
+You: "I run a coffee shop called Sunny Coffee"
 
-? New or Connect?          → New business or add AI to existing
-? Deployment?              → Quick Start / Cloud / Enterprise
-? AI Provider?             → Anthropic / OpenAI
-? Company name?            → Sunny Coffee
-? Describe your business   → We sell specialty coffee...
-
-  Generating your AI team and website...
+  Generating your AI team...
 
   Your team:
-  Barista (customer_support)
-  Roaster (marketing)
-  Grinder (sales)
+  Barista (customer_support) — emails, knowledge, delegation
+  Roaster (marketing)       — emails, knowledge, delegation
+  Grinder (sales)           — emails, knowledge, delegation
 
-  Your website:
-  "Coffee worth waking up for"
+  Orchestrator tools:
+  ✓ schedule_task        — cron-based agent automation
+  ✓ list_scheduled_tasks — view all schedules
+  ✓ cancel_scheduled_task
 
-  ✓ Project created!
-```
-
-## Quick start
-
-```bash
-# Quick Start (Vercel + Supabase, free)
-npx @tellet/create
-cd your-company
-npm install && npm run dev
-
-# Cloud (Docker + Railway, $5/mo)
-npx @tellet/create  # choose "Cloud"
-cd your-company
-docker compose up         # local dev
-railway up                # deploy
-
-# Enterprise (AWS CDK, $5-15/mo)
-npx @tellet/create  # choose "Enterprise"
-cd your-company/infra
-npm install && npx cdk deploy
+  ✓ Your AI company is live!
 ```
 
 ## Architecture
 
 ```
-┌─ tellet Platform ─────────────────────────┐
-│  Owner ↔ Orchestrator                      │
-│              ↕                             │
-│  Agent Team (CS · Marketing · Sales · Ops) │
-│              ↕                             │
-│  MCP Bridge Layer                          │
-│  (KB, Stripe, DB, Email, Custom API...)    │
-└────────────────────────────────────────────┘
+┌─ tellet Platform ──────────────────────────────────┐
+│                                                     │
+│  Owner ↔ Orchestrator (schedule, manage, configure) │
+│              ↕                                     │
+│  Agent Team (CS · Marketing · Sales · Ops)         │
+│     ↕ delegate_to_agent ↕                          │
+│  Actions: email · search · schedule                │
+│              ↕                                     │
+│  Channels: dashboard · widget · cron               │
+│                                                     │
+└─────────────────────────────────────────────────────┘
 ```
 
-## Project structure
+## Agent capabilities by role
+
+| Role | search_knowledge | send_email | delegate_to_agent |
+|------|:---:|:---:|:---:|
+| customer_support | Y | Y | Y |
+| sales | Y | Y | Y |
+| marketing | Y | Y | Y |
+| operations | Y | Y | Y |
+| analytics | Y | - | Y |
+
+## Orchestrator commands
+
+The Orchestrator manages your AI company through conversation:
+
+- "Schedule marketing to send a weekly summary every Monday 9am"
+- "Show all scheduled tasks"
+- "Add our refund policy to the Knowledge Base"
+- "Update the support agent's system prompt"
+- "Show my stats"
+
+## Embeddable widget
+
+Add AI chat to any website:
+
+```html
+<script src="https://tellet.com/widget.js"></script>
+<script>
+  Tellet.init({ companyId: "your-company-id" });
+</script>
+```
+
+Features: dark/light theme, streaming responses, session persistence, mobile responsive.
+
+## Project structure (self-hosted)
 
 ```
 your-company/
-├── agents/                # AI agent definitions (auto-generated)
-├── app/
-│   ├── (site)/            # Public website with chat widget
-│   ├── (dashboard)/       # Management dashboard + Orchestrator
+├─�� app/
+│   ├── (site)/             # Public website with chat widget
+│   ├── (dashboard)/        # Management dashboard + Orchestrator
 │   └── api/
-│       ├── chat/          # Streaming chat API (tool use)
-│       ├── orchestrator/  # Orchestrator API (tool use loop)
-│       └── cron/          # Scheduled agent tasks
-├── components/
-│   ├── chat/              # ChatWidget, Markdown
-│   ├── dashboard/         # Sidebar, Stats, AgentChat, Orchestrator
-│   └── sections/          # Landing page sections
+│       ├── chat/           # Agent chat (SSE, tool use loop)
+│       ├── orchestrator/   # Orchestrator (scheduling, management)
+│       ├── cron/           # Scheduled task execution
+│       └── widget/         # Public widget API (CORS, no auth)
 ├── lib/
-│   ├── engine/            # Agent runtime with tool use agentic loop
-│   ├── providers/         # LLM providers (Anthropic, OpenAI)
-│   ├── mcp/               # MCP client, Knowledge Base, tool registry
-│   ├── orchestrator/      # Orchestrator tools + executor
-│   └── scheduler.ts       # Cron/heartbeat agent scheduler
-├── public/widget.js       # Embeddable chat widget
-├── tellet.json            # Configuration (single source of truth)
-├── Dockerfile             # Docker deployment (Cloud/Enterprise)
-├── docker-compose.yml     # Local dev with PostgreSQL + pgvector
-├── railway.toml           # Railway auto-deploy
-└── infra/                 # AWS CDK (Enterprise only)
-```
-
-## Orchestrator
-
-The Orchestrator is your AI company manager. Talk to it from the dashboard:
-
-- "Show my stats" — conversations, messages, costs
-- "Update the website tagline" — modifies site content
-- "Add Stripe to my agents" — installs tools from marketplace
-- "Schedule marketing to post daily at 9am" — sets up cron tasks
-- "Add our refund policy to the Knowledge Base" — agents reference it
-
-## Tool Marketplace
-
-Connect tools via the Orchestrator or `tellet.json`:
-
-| Tool | Package | Use case |
-|------|---------|----------|
-| Stripe | `@stripe/mcp` | Payments, invoices, subscriptions |
-| Email | `resend-mcp` | Send emails, campaigns |
-| GitHub | `@modelcontextprotocol/server-github` | Issues, PRs, repos |
-| Slack | `@anthropic-ai/mcp-server-slack` | Messages, channels |
-| Notion | `@anthropic-ai/mcp-server-notion` | Docs, databases |
-
-19,000+ MCP servers available via the [MCP Registry](https://registry.modelcontextprotocol.io/).
-
-## Deployment options
-
-| Tier | Provider | Cost | Best for |
-|------|----------|------|----------|
-| Quick Start | Vercel + Supabase | $0 | Prototyping, new business |
-| Cloud | Railway / Render / Fly.io | $5-20/mo | Production, startups |
-| Enterprise | AWS CDK (Lambda + RDS) | $5-15/mo | Scale, existing AWS |
-
-## Connect mode
-
-Already have a business? Use Connect mode:
-
-```bash
-npx @tellet/create  # choose "Connect"
-```
-
-- Skips site generation, keeps dashboard + API
-- Embeddable widget for your existing site:
-
-```html
-<script src="https://your-tellet.com/widget.js"
-        data-agent="support"
-        data-api="https://your-tellet.com"></script>
-```
-
-## Configuration
-
-All configuration lives in `tellet.json`:
-
-```json
-{
-  "company": { "name": "Sunny Coffee", "industry": "Food & Beverage" },
-  "mode": "new",
-  "llm": { "provider": "anthropic", "defaultModel": "claude-sonnet-4-6" },
-  "agents": [
-    { "id": "barista", "role": "customer_support", "tools": ["search_knowledge"] },
-    { "id": "roaster", "role": "marketing", "tools": ["email"] }
-  ],
-  "tools": {
-    "search_knowledge": { "type": "builtin" },
-    "email": { "type": "mcp", "package": "resend-mcp" }
-  },
-  "site": { "tagline": "Coffee worth waking up for", "..." : "..." }
-}
+│   ├── engine/             # Agent runtime with agentic loop
+│   ├── actions/            # Role-based tools (email, delegate, search)
+│   ├── scheduling/         # Cron parser + task executor
+│   ├── orchestrator/       # Orchestrator tools + executor
+│   ├── providers/          # LLM providers (Anthropic, OpenAI)
+│   └── mcp/                # Knowledge base, tool registry
+├── public/widget.js        # Embeddable chat widget
+├── supabase/migrations/    # Database schema
+└── vercel.json             # Cron configuration
 ```
 
 ## Tech stack
 
 - [Next.js 16](https://nextjs.org/) — App framework
-- [PostgreSQL + pgvector](https://github.com/pgvector/pgvector) — Database + vector search
-- [MCP](https://modelcontextprotocol.io/) — Tool integration protocol
+- [Supabase](https://supabase.com/) — Auth, database, pgvector, RLS
 - [Anthropic Claude](https://anthropic.com/) / [OpenAI](https://openai.com/) — AI models
+- [Resend](https://resend.com/) — Email delivery
+- [Vercel Cron](https://vercel.com/docs/cron-jobs) — Scheduled task execution
 - [Tailwind CSS 4](https://tailwindcss.com/) — Styling
-- [Framer Motion](https://www.framer.com/motion/) — Animations
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|:---:|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Y | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Y | Supabase publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Y | Supabase service role key |
+| `ANTHROPIC_API_KEY` | Y | Claude API key |
+| `RESEND_API_KEY` | - | Resend API key (for email) |
+| `CRON_SECRET` | - | Secret for cron endpoint auth |
 
 ## License
 
@@ -190,6 +156,6 @@ MIT
 
 ## Links
 
-- [tellet.com](https://tellet.com) — Website
+- [tellet.com](https://tellet.com) — Hosted platform (free)
 - [GitHub](https://github.com/agentic-company/tellet) — Source code
-- [npm](https://www.npmjs.com/package/@tellet/create) — Package
+- [npm](https://www.npmjs.com/package/@tellet/create) — CLI package

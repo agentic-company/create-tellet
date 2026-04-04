@@ -1,7 +1,7 @@
 {
   "name": "@tellet/create",
   "version": "0.9.0",
-  "description": "The open-source platform for running an Agentic Company",
+  "description": "AI agents that run your business — email, delegate, schedule, embed. One command.",
   "type": "module",
   "bin": {
     "create-tellet": "dist/index.js",
